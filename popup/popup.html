@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="extensionName">Twitch Local Exporter</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="header">
+        <div>
+          <p class="eyebrow" data-i18n="popupEyebrow">Local exporter</p>
+          <h1 id="video-title" data-i18n="loadingTitle">Checking current tab...</h1>
+        </div>
+        <button id="open-options" class="icon-button" type="button" title="Options" aria-label="Options">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
+            <path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.8 1.8 0 0 0 15 19.4a1.8 1.8 0 0 0-1 1.6V21a2 2 0 0 1-4 0v-.09A1.8 1.8 0 0 0 9 19.4a1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.8 1.8 0 0 0 4.6 15a1.8 1.8 0 0 0-1.6-1H3a2 2 0 0 1 0-4h.09A1.8 1.8 0 0 0 4.6 9a1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.8 1.8 0 0 0 9 4.6a1.8 1.8 0 0 0 1-1.6V3a2 2 0 0 1 4 0v.09a1.8 1.8 0 0 0 1 1.51 1.8 1.8 0 0 0 1.98-.36l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.8 1.8 0 0 0 19.4 9a1.8 1.8 0 0 0 1.6 1h.09a2 2 0 0 1 0 4H21a1.8 1.8 0 0 0-1.6 1Z"></path>
+          </svg>
+        </button>
+      </header>
+
+      <section class="notice" id="notice" hidden></section>
+
+      <section class="status-row">
+        <span id="host-status" class="chip" data-state="idle" data-i18n="hostUnknown">Host unknown</span>
+        <span id="probe-status" class="chip" data-state="idle" data-i18n="probeIdle">Not probed</span>
+      </section>
+
+      <nav class="segment" aria-label="Export type">
+        <button class="is-active" type="button" data-mode="video" data-i18n="modeVideo">Video</button>
+        <button type="button" data-mode="audio" data-i18n="modeAudio">Audio</button>
+        <button type="button" data-mode="subtitles" data-i18n="modeSubtitles">Subtitles</button>
+        <button type="button" data-mode="chat" data-i18n="modeChat">Chat</button>
+      </nav>
+
+      <section id="video-panel" class="panel" data-panel="video">
+        <label for="video-quality" data-i18n="videoQuality">Quality</label>
+        <select id="video-quality"></select>
+      </section>
+
+      <section id="audio-panel" class="panel" data-panel="audio" hidden>
+        <label for="audio-format" data-i18n="audioFormat">Audio format</label>
+        <select id="audio-format">
+          <option value="m4a">m4a</option>
+          <option value="mp3">mp3</option>
+          <option value="opus">opus</option>
+          <option value="wav">wav</option>
+          <option value="best">best</option>
+        </select>
+        <label for="audio-bitrate" data-i18n="audioBitrate">Available bitrate</label>
+        <select id="audio-bitrate"></select>
+      </section>
+
+      <section id="subtitles-panel" class="panel" data-panel="subtitles" hidden>
+        <label for="subtitle-language" data-i18n="subtitleLanguage">Language</label>
+        <select id="subtitle-language"></select>
+        <label for="subtitle-format" data-i18n="subtitleFormat">Subtitle format</label>
+        <select id="subtitle-format">
+          <option value="srt">srt</option>
+          <option value="vtt">vtt</option>
+        </select>
+        <label for="subtitle-chinese-script" data-i18n="subtitleChineseScript">Chinese subtitles</label>
+        <select id="subtitle-chinese-script">
+          <option value="traditional_tw" data-i18n="subtitleChineseScriptTraditionalTw">Traditional Chinese (Taiwan)</option>
+          <option value="original" data-i18n="subtitleChineseScriptOriginal">Original text</option>
+        </select>
+        <label for="subtitle-source" data-i18n="subtitleSource">Source</label>
+        <select id="subtitle-source">
+          <option value="auto" data-i18n="subtitleSourceAuto">Twitch captions first, Whisper fallback</option>
+          <option value="twitch" data-i18n="subtitleSourceTwitch">Twitch captions only</option>
+          <option value="whisper" data-i18n="subtitleSourceWhisper">Force Whisper</option>
+        </select>
+      </section>
+
+      <section id="chat-panel" class="panel" data-panel="chat" hidden>
+        <label for="chat-format" data-i18n="chatFormat">Chat format</label>
+        <select id="chat-format">
+          <option value="json">json</option>
+          <option value="html">html</option>
+          <option value="txt">txt</option>
+        </select>
+        <label class="check-row">
+          <input id="embed-chat-images" type="checkbox">
+          <span data-i18n="embedChatImages">Embed emotes and badges</span>
+        </label>
+      </section>
+
+      <section class="panel">
+        <label for="output-dir" data-i18n="outputDir">Output folder</label>
+        <div class="input-row">
+          <input id="output-dir" type="text" placeholder="%USERPROFILE%\\Downloads\\Twitch Local Exporter">
+          <button id="choose-output" type="button" class="secondary" data-i18n="chooseFolder">Choose...</button>
+        </div>
+        <label class="check-row">
+          <input id="ask-output-dir" type="checkbox">
+          <span data-i18n="askOutputDirOnExport">Ask before each export</span>
+        </label>
+      </section>
+
+      <section class="progress-card" id="job-card" hidden>
+        <div class="progress-head">
+          <span id="job-label" data-i18n="jobQueued">Queued</span>
+          <span id="job-percent">0%</span>
+        </div>
+        <div class="bar"><span id="job-bar"></span></div>
+        <p id="job-detail"></p>
+        <div class="actions inline">
+          <button id="open-output" type="button" class="secondary" disabled data-i18n="openOutput">Open</button>
+          <button id="cancel-job" type="button" class="secondary" data-i18n="cancelJob">Cancel</button>
+        </div>
+      </section>
+
+      <section class="actions">
+        <button id="refresh" type="button" class="secondary" data-i18n="refresh">Refresh</button>
+        <button id="export" type="button" data-i18n="exportButton">Export</button>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

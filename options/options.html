@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="optionsTitle">Twitch Local Exporter Options</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <p class="eyebrow" data-i18n="extensionName">Twitch Local Exporter</p>
+        <h1 data-i18n="optionsTitle">Options</h1>
+      </header>
+
+      <section class="band">
+        <h2 data-i18n="defaultsHeading">Defaults</h2>
+        <div class="grid">
+          <label for="output-dir" data-i18n="outputDir">Output folder</label>
+          <div class="input-row">
+            <input id="output-dir" type="text" placeholder="%USERPROFILE%\\Downloads\\Twitch Local Exporter">
+            <button id="choose-output" type="button" class="secondary" data-i18n="chooseFolder">Choose...</button>
+          </div>
+
+          <label for="ask-output-dir" data-i18n="askOutputDirOnExport">Ask before each export</label>
+          <input id="ask-output-dir" type="checkbox">
+
+          <label for="use-browser-cookies" data-i18n="useBrowserCookies">Use browser cookies</label>
+          <input id="use-browser-cookies" type="checkbox">
+
+          <label for="default-mode" data-i18n="defaultMode">Default mode</label>
+          <select id="default-mode">
+            <option value="video" data-i18n="modeVideo">Video</option>
+            <option value="audio" data-i18n="modeAudio">Audio</option>
+            <option value="subtitles" data-i18n="modeSubtitles">Subtitles</option>
+            <option value="chat" data-i18n="modeChat">Chat</option>
+          </select>
+
+          <label for="video-quality" data-i18n="videoQuality">Video quality</label>
+          <select id="video-quality">
+            <option value="best" data-i18n="bestAvailable">Best available</option>
+            <option value="2160">2160p</option>
+            <option value="1440">1440p</option>
+            <option value="1080">1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+            <option value="360">360p</option>
+          </select>
+
+          <label for="audio-format" data-i18n="audioFormat">Audio format</label>
+          <select id="audio-format">
+            <option value="m4a">m4a</option>
+            <option value="mp3">mp3</option>
+            <option value="opus">opus</option>
+            <option value="wav">wav</option>
+            <option value="best">best</option>
+          </select>
+
+          <label for="subtitle-format" data-i18n="subtitleFormat">Subtitle format</label>
+          <select id="subtitle-format">
+            <option value="srt">srt</option>
+            <option value="vtt">vtt</option>
+          </select>
+
+          <label for="subtitle-language" data-i18n="subtitleLanguage">Language</label>
+          <select id="subtitle-language">
+            <option value="zh" data-i18n="languageChinese">Chinese</option>
+            <option value="auto" data-i18n="autoLanguage">Auto</option>
+            <option value="ja" data-i18n="languageJapanese">Japanese</option>
+            <option value="en" data-i18n="languageEnglish">English</option>
+          </select>
+
+          <label for="subtitle-chinese-script" data-i18n="subtitleChineseScript">Chinese subtitles</label>
+          <select id="subtitle-chinese-script">
+            <option value="traditional_tw" data-i18n="subtitleChineseScriptTraditionalTw">Traditional Chinese (Taiwan)</option>
+            <option value="original" data-i18n="subtitleChineseScriptOriginal">Original text</option>
+          </select>
+
+          <label for="subtitle-source" data-i18n="subtitleSource">Source</label>
+          <select id="subtitle-source">
+            <option value="auto" data-i18n="subtitleSourceAuto">Twitch captions first, Whisper fallback</option>
+            <option value="twitch" data-i18n="subtitleSourceTwitch">Twitch captions only</option>
+            <option value="whisper" data-i18n="subtitleSourceWhisper">Force Whisper</option>
+          </select>
+
+          <label for="chat-format" data-i18n="chatFormat">Chat format</label>
+          <select id="chat-format">
+            <option value="json">json</option>
+            <option value="html">html</option>
+            <option value="txt">txt</option>
+          </select>
+
+          <label for="embed-chat-images" data-i18n="embedChatImages">Embed emotes and badges</label>
+          <input id="embed-chat-images" type="checkbox">
+
+          <label for="whisper-model" data-i18n="whisperModel">Whisper model</label>
+          <select id="whisper-model">
+            <option value="tiny">tiny</option>
+            <option value="base">base</option>
+            <option value="small">small</option>
+            <option value="medium">medium</option>
+            <option value="large">large</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button id="save" type="button" data-i18n="save">Save</button>
+        </div>
+      </section>
+
+      <section class="band">
+        <h2 data-i18n="nativeHostHeading">Native host</h2>
+        <div id="host-status" class="status"></div>
+        <div class="actions">
+          <button id="check-host" class="secondary" type="button" data-i18n="checkHost">Check host</button>
+          <button id="update-tools" class="secondary" type="button" data-i18n="updateTools">Update tools</button>
+        </div>
+      </section>
+
+      <section class="band">
+        <h2 data-i18n="scopeHeading">Use scope</h2>
+        <p data-i18n="scopeCopy">Use this local tool only for videos you own or are authorized to export.</p>
+      </section>
+
+      <p id="status" class="save-status"></p>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

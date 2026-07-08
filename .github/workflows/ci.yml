@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate and package
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check JavaScript syntax
+        shell: pwsh
+        run: |
+          node --check src\background.js
+          node --check src\content.js
+          node --check popup\popup.js
+          node --check options\options.js
+
+      - name: Run extension smoke tests
+        shell: pwsh
+        run: node scripts\smoke-test.mjs
+
+      - name: Run native host unit tests
+        shell: pwsh
+        run: python -m unittest discover -s native-host\tests
+
+      - name: Package extension runtime
+        shell: pwsh
+        run: .\scripts\package.ps1
+
+      - name: Package release dry run
+        shell: pwsh
+        run: .\scripts\package-release.ps1 -Version "0.1.0"
+
+      - name: Upload extension package
+        uses: actions/upload-artifact@v7
+        with:
+          name: twitch-local-exporter-extension
+          path: |
+            dist/twitch-local-exporter.zip
+            dist/unpacked/twitch-local-exporter/**
+
+      - name: Upload release dry-run assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: twitch-local-exporter-release-dry-run
+          path: |
+            dist/release/twitch-local-exporter-v0.1.0-windows.zip
+            dist/release/twitch-local-exporter-extension-v0.1.0.zip
+            dist/release/SHA256SUMS.txt
+            dist/release/release-manifest.json

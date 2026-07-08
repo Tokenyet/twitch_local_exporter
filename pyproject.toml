@@ -1,0 +1,11 @@
+[project]
+name = "twitch-local-exporter-native-host"
+version = "0.1.0"
+description = "Native messaging host for Twitch Local Exporter"
+requires-python = ">=3.11"
+dependencies = [
+  "opencc-python-reimplemented>=0.1.7"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["native-host/tests"]
