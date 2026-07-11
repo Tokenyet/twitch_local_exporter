@@ -1,124 +1,114 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
-  <title id="title">Twitch Local Exporter local processing architecture</title>
-  <desc id="desc">A browser extension sends an authorized Twitch VOD export request to a Windows native messaging host. Local tools download, remux, extract audio, export chat, and transcribe subtitles. Output files stay in a local folder.</desc>
+  <title id="title">Twitch Local Exporter technical architecture</title>
+  <desc id="desc">A Twitch VOD page starts an export in a browser extension. A local Windows native host uses local tools to download media, create subtitles, and export chat. Files are written only to the selected local folder.</desc>
   <defs>
     <linearGradient id="header" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0f766e"/>
       <stop offset="1" stop-color="#2563eb"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.14"/>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="13" flood-color="#0f172a" flood-opacity="0.12"/>
     </filter>
-    <marker id="arrow-teal" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto" markerUnits="strokeWidth">
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto" markerUnits="strokeWidth">
       <path d="M2 2 L10 7 L2 12 Z" fill="#0f766e"/>
     </marker>
-    <marker id="arrow-blue" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto" markerUnits="strokeWidth">
-      <path d="M2 2 L10 7 L2 12 Z" fill="#2563eb"/>
-    </marker>
     <style>
-      .bg { fill: #f6f8fb; }
-      .card { fill: #ffffff; stroke: #dbe3ec; stroke-width: 2; filter: url(#shadow); }
-      .card-soft { fill: #ffffff; stroke: #dbe3ec; stroke-width: 2; }
-      .hero-title { font: 700 28px/1.2 "Segoe UI", Arial, sans-serif; fill: #ffffff; }
-      .hero-subtitle { font: 500 16px/1.45 "Segoe UI", Arial, sans-serif; fill: #dff7ef; }
-      .title { font: 700 34px/1.2 "Segoe UI", Arial, sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 18px/1.45 "Segoe UI", Arial, sans-serif; fill: #475569; }
-      .section-title { font: 700 24px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
-      .label { font: 650 18px "Segoe UI", Arial, sans-serif; fill: #172033; }
-      .body { font: 500 15px "Segoe UI", Arial, sans-serif; fill: #506070; }
-      .small { font: 600 13px "Segoe UI", Arial, sans-serif; fill: #64748b; }
-      .chip { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #0f766e; }
-      .chip-fill { fill: #dff7ef; }
-      .chip-blue { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #1d4ed8; }
-      .chip-blue-fill { fill: #dbeafe; }
-      .chip-amber { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #92400e; }
-      .chip-amber-fill { fill: #fef3c7; }
-      .line-teal { stroke: #0f766e; stroke-width: 5; fill: none; marker-end: url(#arrow-teal); }
-      .line-blue { stroke: #2563eb; stroke-width: 5; fill: none; marker-end: url(#arrow-blue); }
-      .thin { stroke: #cbd5e1; stroke-width: 2; fill: none; }
-      .icon-stroke { stroke: #0f172a; stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-      .icon-teal { stroke: #0f766e; stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-      .icon-blue { stroke: #2563eb; stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-      .muted-fill { fill: #edf2f7; }
-      .teal-fill { fill: #e6f7f2; }
-      .blue-fill { fill: #eaf2ff; }
-      .amber-fill { fill: #fff7df; }
-      .red-fill { fill: #fee2e2; }
+      .bg { fill: #f8fafc; }
+      .header-title { font: 700 32px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .header-subtitle { font: 500 16px "Segoe UI", Arial, sans-serif; fill: #dff7ef; }
+      .stage { fill: #ffffff; stroke: #d8e2ee; stroke-width: 2; filter: url(#shadow); }
+      .boundary { fill: #f0fdf9; stroke: #8bd5c6; stroke-width: 2; stroke-dasharray: 8 7; }
+      .overline { font: 700 12px "Segoe UI", Arial, sans-serif; letter-spacing: 1.3px; fill: #64748b; }
+      .boundary-label { font: 700 12px "Segoe UI", Arial, sans-serif; letter-spacing: 1px; fill: #0f766e; }
+      .stage-title { font: 700 21px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+      .stage-body { font: 500 14px "Segoe UI", Arial, sans-serif; fill: #475569; }
+      .chip { font: 700 12px "Segoe UI", Arial, sans-serif; }
+      .chip-blue { fill: #e0ebff; }
+      .chip-blue-text { fill: #1d4ed8; }
+      .chip-teal { fill: #dff7ef; }
+      .chip-teal-text { fill: #0f766e; }
+      .chip-amber { fill: #fff2cc; }
+      .chip-amber-text { fill: #a16207; }
+      .number { font: 700 16px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .arrow { stroke: #0f766e; stroke-width: 5; fill: none; marker-end: url(#arrow); }
+      .arrow-note { font: 700 11px "Segoe UI", Arial, sans-serif; fill: #0f766e; }
+      .output-title { font: 700 19px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+      .output-body { font: 500 13px "Segoe UI", Arial, sans-serif; fill: #64748b; }
+      .output-label { font: 700 14px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+      .output-detail { font: 500 12px "Segoe UI", Arial, sans-serif; fill: #64748b; }
     </style>
   </defs>
 
   <rect class="bg" width="1280" height="720"/>
 
-  <rect x="60" y="48" width="1160" height="112" rx="28" fill="url(#header)"/>
-  <text x="96" y="96" class="hero-title">Export Twitch VODs with a local, private processing pipeline</text>
-  <text x="96" y="130" class="hero-subtitle">The browser controls the job; Windows tools download, export chat, convert media, and create subtitles locally.</text>
+  <rect x="56" y="40" width="1168" height="132" rx="26" fill="url(#header)"/>
+  <text x="92" y="94" class="header-title">Twitch VOD export, processed locally</text>
+  <text x="92" y="126" class="header-subtitle">The browser starts the job; Windows performs download, conversion, transcription, and chat export on your machine.</text>
+  <rect x="92" y="141" width="132" height="22" rx="11" fill="#dff7ef"/>
+  <text x="108" y="157" class="chip chip-teal-text">NO CLOUD UPLOAD</text>
+  <rect x="238" y="141" width="162" height="22" rx="11" fill="#dbeafe"/>
+  <text x="254" y="157" class="chip chip-blue-text">USER-INITIATED ONLY</text>
 
-  <rect x="70" y="210" width="300" height="350" rx="22" class="card"/>
-  <rect x="110" y="250" width="84" height="58" rx="14" class="blue-fill"/>
-  <path class="icon-blue" d="M126 292h52M132 266h40M132 278h28"/>
-  <circle cx="178" cy="266" r="5" fill="#2563eb"/>
-  <text x="110" y="350" class="section-title">Browser Extension</text>
-  <text x="110" y="384" class="body">Runs on a Twitch VOD page in</text>
-  <text x="110" y="407" class="body">Chrome, Edge, Chromium, or Vivaldi.</text>
-  <rect x="110" y="436" width="112" height="30" rx="15" class="chip-blue-fill"/>
-  <text x="128" y="456" class="chip-blue">activeTab</text>
-  <rect x="232" y="436" width="96" height="30" rx="15" class="chip-blue-fill"/>
-  <text x="250" y="456" class="chip-blue">storage</text>
-  <text x="110" y="496" class="small">Collects current VOD URL, title,</text>
-  <text x="110" y="516" class="small">cookies when enabled, and export settings.</text>
+  <rect x="620" y="204" width="600" height="322" rx="24" class="boundary"/>
+  <rect x="648" y="220" width="212" height="24" rx="12" class="chip-teal"/>
+  <text x="664" y="237" class="boundary-label">LOCAL WINDOWS BOUNDARY</text>
 
-  <path class="line-blue" d="M388 370 C430 370 446 370 488 370"/>
-  <rect x="410" y="322" width="96" height="36" rx="18" class="chip-blue-fill"/>
-  <text x="426" y="345" class="chip-blue">user action</text>
+  <rect x="60" y="258" width="250" height="246" rx="20" class="stage"/>
+  <circle cx="92" cy="292" r="17" fill="#2563eb"/>
+  <text x="87" y="298" class="number">1</text>
+  <text x="120" y="288" class="overline">SOURCE</text>
+  <text x="88" y="337" class="stage-title">Twitch VOD page</text>
+  <text x="88" y="371" class="stage-body">Open a video you are allowed</text>
+  <text x="88" y="393" class="stage-body">to export in a Chromium browser.</text>
+  <rect x="88" y="432" width="154" height="28" rx="14" class="chip-blue"/>
+  <text x="104" y="451" class="chip chip-blue-text">ACTIVE TAB, ON CLICK</text>
 
-  <rect x="500" y="210" width="300" height="350" rx="22" class="card"/>
-  <rect x="540" y="250" width="84" height="58" rx="14" class="teal-fill"/>
-  <path class="icon-teal" d="M556 292h52M566 262h32M566 276h32"/>
-  <path class="icon-teal" d="M540 316h84"/>
-  <text x="540" y="350" class="section-title">Native Host</text>
-  <text x="540" y="384" class="body">Accepts native-messaging requests</text>
-  <text x="540" y="407" class="body">from the extension on Windows.</text>
-  <rect x="540" y="436" width="144" height="30" rx="15" class="chip-fill"/>
-  <text x="558" y="456" class="chip">local process</text>
-  <rect x="540" y="476" width="202" height="30" rx="15" class="chip-fill"/>
-  <text x="558" y="496" class="chip">nativeMessaging only</text>
-  <text x="540" y="522" class="small">Tracks progress and cancellation.</text>
-  <text x="540" y="542" class="small">Reports local tool status.</text>
+  <rect x="355" y="258" width="250" height="246" rx="20" class="stage"/>
+  <circle cx="387" cy="292" r="17" fill="#2563eb"/>
+  <text x="382" y="298" class="number">2</text>
+  <text x="415" y="288" class="overline">BROWSER</text>
+  <text x="383" y="337" class="stage-title">Extension popup</text>
+  <text x="383" y="371" class="stage-body">Collects the URL, title, selected</text>
+  <text x="383" y="393" class="stage-body">format, and optional cookies.</text>
+  <rect x="383" y="432" width="158" height="28" rx="14" class="chip-blue"/>
+  <text x="399" y="451" class="chip chip-blue-text">EXPORT REQUEST</text>
 
-  <path class="line-teal" d="M818 370 C860 370 878 370 920 370"/>
-  <rect x="846" y="322" width="112" height="36" rx="18" class="chip-fill"/>
-  <text x="872" y="345" class="chip">tools</text>
+  <rect x="650" y="258" width="250" height="246" rx="20" class="stage"/>
+  <circle cx="682" cy="292" r="17" fill="#0f766e"/>
+  <text x="677" y="298" class="number">3</text>
+  <text x="710" y="288" class="overline">WINDOWS</text>
+  <text x="678" y="337" class="stage-title">Native host</text>
+  <text x="678" y="371" class="stage-body">Native messaging receives the job</text>
+  <text x="678" y="393" class="stage-body">and returns status to the popup.</text>
+  <rect x="678" y="432" width="162" height="28" rx="14" class="chip-teal"/>
+  <text x="694" y="451" class="chip chip-teal-text">LOCAL PROCESS ONLY</text>
 
-  <rect x="930" y="210" width="280" height="350" rx="22" class="card"/>
-  <rect x="970" y="250" width="84" height="58" rx="14" class="amber-fill"/>
-  <path class="icon-stroke" d="M986 290h52M992 266h40M992 278h32"/>
-  <path class="icon-stroke" d="M1038 266l12 12-12 12"/>
-  <text x="970" y="350" class="section-title">Local Tools</text>
-  <text x="970" y="384" class="body">yt-dlp downloads authorized media.</text>
-  <text x="970" y="407" class="body">FFmpeg remuxes or extracts audio.</text>
-  <text x="970" y="430" class="body">TwitchDownloaderCLI exports chat.</text>
-  <rect x="970" y="462" width="82" height="30" rx="15" class="chip-amber-fill"/>
-  <text x="989" y="482" class="chip-amber">yt-dlp</text>
-  <rect x="1062" y="462" width="84" height="30" rx="15" class="chip-amber-fill"/>
-  <text x="1078" y="482" class="chip-amber">FFmpeg</text>
-  <rect x="970" y="502" width="94" height="30" rx="15" class="chip-amber-fill"/>
-  <text x="988" y="522" class="chip-amber">Whisper</text>
+  <rect x="945" y="258" width="250" height="246" rx="20" class="stage"/>
+  <circle cx="977" cy="292" r="17" fill="#d97706"/>
+  <text x="972" y="298" class="number">4</text>
+  <text x="1005" y="288" class="overline">TOOLCHAIN</text>
+  <text x="973" y="337" class="stage-title">Local tools</text>
+  <text x="973" y="371" class="stage-body">yt-dlp and FFmpeg handle media;</text>
+  <text x="973" y="393" class="stage-body">Whisper and TwitchDownloaderCLI</text>
+  <text x="973" y="415" class="stage-body">create subtitles and chat logs.</text>
+  <rect x="973" y="442" width="136" height="28" rx="14" class="chip-amber"/>
+  <text x="989" y="461" class="chip chip-amber-text">RUNS LOCALLY</text>
 
-  <rect x="160" y="600" width="960" height="72" rx="22" class="card-soft"/>
-  <rect x="190" y="618" width="148" height="36" rx="18" class="chip-fill"/>
-  <text x="212" y="642" class="chip">Local outputs</text>
-  <text x="370" y="643" class="label">MP4 video</text>
-  <circle cx="350" cy="636" r="6" fill="#0f766e"/>
-  <text x="535" y="643" class="label">M4A / MP3 / OPUS / WAV</text>
-  <circle cx="515" cy="636" r="6" fill="#2563eb"/>
-  <text x="840" y="643" class="label">SRT / VTT / chat logs</text>
-  <circle cx="820" cy="636" r="6" fill="#d97706"/>
+  <path d="M312 522 H341" class="arrow"/>
+  <path d="M607 522 H636" class="arrow"/>
+  <path d="M902 522 H931" class="arrow"/>
 
-  <path class="thin" d="M650 560 L650 600"/>
-  <path class="thin" d="M1070 560 C1070 580 1010 600 930 600"/>
+  <rect x="60" y="562" width="1135" height="112" rx="22" fill="#ffffff" stroke="#d8e2ee" stroke-width="2"/>
+  <text x="92" y="601" class="output-title">Selected local output folder</text>
+  <text x="92" y="624" class="output-body">Generated files stay on your machine.</text>
 
-  <rect x="84" y="176" width="188" height="34" rx="17" class="red-fill"/>
-  <text x="104" y="199" class="chip-amber">authorized videos only</text>
-  <rect x="946" y="176" width="188" height="34" rx="17" class="chip-fill"/>
-  <text x="966" y="199" class="chip">no cloud upload</text>
+  <circle cx="428" cy="597" r="7" fill="#0f766e"/>
+  <text x="446" y="602" class="output-label">Media</text>
+  <text x="446" y="624" class="output-detail">MP4 · M4A · MP3 · OPUS · WAV</text>
+  <circle cx="678" cy="597" r="7" fill="#2563eb"/>
+  <text x="696" y="602" class="output-label">Subtitles</text>
+  <text x="696" y="624" class="output-detail">SRT · VTT · Traditional Chinese</text>
+  <circle cx="958" cy="597" r="7" fill="#d97706"/>
+  <text x="976" y="602" class="output-label">Chat</text>
+  <text x="976" y="624" class="output-detail">JSON · HTML · plain text</text>
 </svg>
