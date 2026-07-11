@@ -56,11 +56,11 @@ Open a Twitch VOD page like `https://www.twitch.tv/videos/<vod-id>`, click the e
 
 ![Options page showing Twitch export, subtitle, chat, and native host settings](docs/assets/options.png)
 
-## How It Works
+## Technical Architecture
 
 ![Architecture diagram showing the browser extension handing a Twitch VOD export request to a local Windows native host, which runs yt-dlp, TwitchDownloaderCLI, FFmpeg, and Whisper locally before writing media, subtitles, and chat logs to disk](docs/assets/how-it-works.png)
 
-The Manifest V3 extension reads the active Twitch tab only when you open the popup. It sends the export request to a Windows native messaging host, which runs the local toolchain and writes generated files to your selected output folder.
+The flow is: **Twitch VOD tab → extension popup → Windows native host → local tools → selected output folder**. The Manifest V3 extension reads the active Twitch tab only when you open the popup; it sends the export request to a Windows native messaging host, which runs the local toolchain and writes generated files to your selected output folder.
 
 `TwitchDownloaderCLI` is used for chat export because its `chatdownload` mode supports VOD chat output as JSON, HTML, or text. Media and Whisper subtitle fallback use `yt-dlp`, FFmpeg, and whisper.cpp. Chinese subtitle conversion uses OpenCC `s2twp` after the subtitle file is produced, leaving VOD chat text unchanged.
 

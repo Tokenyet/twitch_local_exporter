@@ -19,8 +19,8 @@
       .bg { fill: #f6f8fb; }
       .card { fill: #ffffff; stroke: #dbe3ec; stroke-width: 2; filter: url(#shadow); }
       .card-soft { fill: #ffffff; stroke: #dbe3ec; stroke-width: 2; }
-      .hero-title { font: 700 32px/1.2 "Segoe UI", Arial, sans-serif; fill: #ffffff; }
-      .hero-subtitle { font: 500 17px/1.45 "Segoe UI", Arial, sans-serif; fill: #dff7ef; }
+      .hero-title { font: 700 28px/1.2 "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .hero-subtitle { font: 500 16px/1.45 "Segoe UI", Arial, sans-serif; fill: #dff7ef; }
       .title { font: 700 34px/1.2 "Segoe UI", Arial, sans-serif; fill: #0f172a; }
       .subtitle { font: 500 18px/1.45 "Segoe UI", Arial, sans-serif; fill: #475569; }
       .section-title { font: 700 24px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
@@ -50,16 +50,16 @@
   <rect class="bg" width="1280" height="720"/>
 
   <rect x="60" y="48" width="1160" height="112" rx="28" fill="url(#header)"/>
-  <text x="96" y="96" class="hero-title">Export Twitch VODs without sending the job to a cloud service</text>
-  <text x="96" y="130" class="hero-subtitle">Browser UI for control. Windows native host for local downloads, chat export, conversion, and subtitles.</text>
+  <text x="96" y="96" class="hero-title">Export Twitch VODs with a local, private processing pipeline</text>
+  <text x="96" y="130" class="hero-subtitle">The browser controls the job; Windows tools download, export chat, convert media, and create subtitles locally.</text>
 
-  <rect x="70" y="210" width="300" height="330" rx="22" class="card"/>
+  <rect x="70" y="210" width="300" height="350" rx="22" class="card"/>
   <rect x="110" y="250" width="84" height="58" rx="14" class="blue-fill"/>
   <path class="icon-blue" d="M126 292h52M132 266h40M132 278h28"/>
   <circle cx="178" cy="266" r="5" fill="#2563eb"/>
   <text x="110" y="350" class="section-title">Browser Extension</text>
-  <text x="110" y="384" class="body">Runs in Chrome, Edge, Chromium,</text>
-  <text x="110" y="407" class="body">or Vivaldi on a Twitch VOD page.</text>
+  <text x="110" y="384" class="body">Runs on a Twitch VOD page in</text>
+  <text x="110" y="407" class="body">Chrome, Edge, Chromium, or Vivaldi.</text>
   <rect x="110" y="436" width="112" height="30" rx="15" class="chip-blue-fill"/>
   <text x="128" y="456" class="chip-blue">activeTab</text>
   <rect x="232" y="436" width="96" height="30" rx="15" class="chip-blue-fill"/>
@@ -71,30 +71,31 @@
   <rect x="410" y="322" width="96" height="36" rx="18" class="chip-blue-fill"/>
   <text x="426" y="345" class="chip-blue">user action</text>
 
-  <rect x="500" y="210" width="300" height="330" rx="22" class="card"/>
+  <rect x="500" y="210" width="300" height="350" rx="22" class="card"/>
   <rect x="540" y="250" width="84" height="58" rx="14" class="teal-fill"/>
   <path class="icon-teal" d="M556 292h52M566 262h32M566 276h32"/>
   <path class="icon-teal" d="M540 316h84"/>
   <text x="540" y="350" class="section-title">Native Host</text>
-  <text x="540" y="384" class="body">A local Windows process receives</text>
-  <text x="540" y="407" class="body">requests from the extension.</text>
+  <text x="540" y="384" class="body">Accepts native-messaging requests</text>
+  <text x="540" y="407" class="body">from the extension on Windows.</text>
   <rect x="540" y="436" width="144" height="30" rx="15" class="chip-fill"/>
   <text x="558" y="456" class="chip">local process</text>
   <rect x="540" y="476" width="202" height="30" rx="15" class="chip-fill"/>
   <text x="558" y="496" class="chip">nativeMessaging only</text>
-  <text x="540" y="526" class="small">Tracks progress, cancellation, and tool status.</text>
+  <text x="540" y="522" class="small">Tracks progress and cancellation.</text>
+  <text x="540" y="542" class="small">Reports local tool status.</text>
 
   <path class="line-teal" d="M818 370 C860 370 878 370 920 370"/>
   <rect x="846" y="322" width="112" height="36" rx="18" class="chip-fill"/>
   <text x="872" y="345" class="chip">tools</text>
 
-  <rect x="930" y="210" width="280" height="330" rx="22" class="card"/>
+  <rect x="930" y="210" width="280" height="350" rx="22" class="card"/>
   <rect x="970" y="250" width="84" height="58" rx="14" class="amber-fill"/>
   <path class="icon-stroke" d="M986 290h52M992 266h40M992 278h32"/>
   <path class="icon-stroke" d="M1038 266l12 12-12 12"/>
   <text x="970" y="350" class="section-title">Local Tools</text>
   <text x="970" y="384" class="body">yt-dlp downloads authorized media.</text>
-  <text x="970" y="407" class="body">FFmpeg remuxes and extracts audio.</text>
+  <text x="970" y="407" class="body">FFmpeg remuxes or extracts audio.</text>
   <text x="970" y="430" class="body">TwitchDownloaderCLI exports chat.</text>
   <rect x="970" y="462" width="82" height="30" rx="15" class="chip-amber-fill"/>
   <text x="989" y="482" class="chip-amber">yt-dlp</text>
@@ -103,18 +104,18 @@
   <rect x="970" y="502" width="94" height="30" rx="15" class="chip-amber-fill"/>
   <text x="988" y="522" class="chip-amber">Whisper</text>
 
-  <rect x="160" y="590" width="960" height="72" rx="22" class="card-soft"/>
-  <rect x="190" y="608" width="148" height="36" rx="18" class="chip-fill"/>
-  <text x="212" y="632" class="chip">Local outputs</text>
-  <text x="370" y="633" class="label">MP4 video</text>
-  <circle cx="350" cy="626" r="6" fill="#0f766e"/>
-  <text x="535" y="633" class="label">M4A / MP3 / OPUS / WAV</text>
-  <circle cx="515" cy="626" r="6" fill="#2563eb"/>
-  <text x="840" y="633" class="label">SRT / VTT / chat logs</text>
-  <circle cx="820" cy="626" r="6" fill="#d97706"/>
+  <rect x="160" y="600" width="960" height="72" rx="22" class="card-soft"/>
+  <rect x="190" y="618" width="148" height="36" rx="18" class="chip-fill"/>
+  <text x="212" y="642" class="chip">Local outputs</text>
+  <text x="370" y="643" class="label">MP4 video</text>
+  <circle cx="350" cy="636" r="6" fill="#0f766e"/>
+  <text x="535" y="643" class="label">M4A / MP3 / OPUS / WAV</text>
+  <circle cx="515" cy="636" r="6" fill="#2563eb"/>
+  <text x="840" y="643" class="label">SRT / VTT / chat logs</text>
+  <circle cx="820" cy="636" r="6" fill="#d97706"/>
 
-  <path class="thin" d="M650 540 L650 590"/>
-  <path class="thin" d="M1070 540 C1070 570 1010 590 930 590"/>
+  <path class="thin" d="M650 560 L650 600"/>
+  <path class="thin" d="M1070 560 C1070 580 1010 600 930 600"/>
 
   <rect x="84" y="176" width="188" height="34" rx="17" class="red-fill"/>
   <text x="104" y="199" class="chip-amber">authorized videos only</text>
